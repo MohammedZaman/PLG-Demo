@@ -10,4 +10,7 @@
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\CountryController %28copy%29.cs" />
+  </ItemGroup>
 </Project>

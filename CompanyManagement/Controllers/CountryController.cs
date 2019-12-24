@@ -20,10 +20,10 @@ namespace CompanyManagement.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
-        {
+        //[HttpGet]
+        //public IEnumerable<WeatherForecast> Get()
+        //{
             
-        }
+        //}
     }
 }
