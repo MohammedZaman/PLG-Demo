@@ -9,8 +9,10 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="DBcontexts\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Controllers\CountryController %28copy%29.cs" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
   </ItemGroup>
 </Project>

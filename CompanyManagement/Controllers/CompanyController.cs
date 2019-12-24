@@ -11,14 +11,14 @@ namespace CompanyManagement.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CountryController : ControllerBase
+    public class CompanyController : ControllerBase
     {
+  
 
+        private readonly ILogger<CompanyController> _logger;
+        private readonly CompanyContext _context;
 
-        private readonly ILogger<CountryController> _logger;
-        private readonly CountryContext _context;
-
-        public CountryController(ILogger<CountryController> logger, CountryContext context)
+        public CompanyController(ILogger<CompanyController> logger, CompanyContext context)
         {
             _context = context;
             _logger = logger;
@@ -27,10 +27,19 @@ namespace CompanyManagement.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<Country> companies = _context.countries.ToList();
+            List<Company> companies = _context.companies.ToList();
             return Ok(companies);
         }
 
+        [HttpPost]
+        public IActionResult AddCompany(Company company)
+        {
 
+            _context.addCompany(company);
+            _context.SaveChanges();
+            return Ok(company);
+
+
+        }
     }
 }
