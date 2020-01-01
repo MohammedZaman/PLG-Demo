@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using CompanyManagement.DBcontexts;
 using CompanyManagement.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace CompanyManagement.Controllers
 {
@@ -16,9 +18,9 @@ namespace CompanyManagement.Controllers
 
 
         private readonly ILogger<CountryController> _logger;
-        private readonly CountryContext _context;
+        private readonly CompanyContext _context;
 
-        public CountryController(ILogger<CountryController> logger, CountryContext context)
+        public CountryController(ILogger<CountryController> logger, CompanyContext context)
         {
             _context = context;
             _logger = logger;
@@ -27,8 +29,22 @@ namespace CompanyManagement.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<Country> companies = _context.countries.ToList();
-            return Ok(companies);
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Newtonsoft.Json.Formatting.Indented,
+                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            };
+            var x = _context.countries
+           .Include(comp => comp.restrictedCompanies)
+           .ThenInclude(company => company.company);
+         
+
+            
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+
+
+
+            return Ok(json);
         }
 
 

@@ -27,8 +27,10 @@ namespace CompanyManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Company DB
-            services.AddDbContext<CompanyContext>(opts =>
+
+            
+                       // Company DB
+                       services.AddDbContext<CompanyContext>(opts =>
         opts.UseInMemoryDatabase("companyDB"));
             services.AddScoped<CompanyContext>();
 

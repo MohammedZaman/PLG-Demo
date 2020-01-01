@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using CompanyManagement.DBcontexts;
 using CompanyManagement.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace CompanyManagement.Controllers
 {
@@ -27,19 +29,59 @@ namespace CompanyManagement.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<Company> companies = _context.companies.ToList();
-            return Ok(companies);
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Newtonsoft.Json.Formatting.Indented,
+                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            };
+            var x = _context.companies
+           .Include(comp => comp.RestrictedCountries)
+           .ThenInclude(country => country.country);
+          
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+           
+    
+
+            return Ok(json); 
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(Guid id)
+        {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Newtonsoft.Json.Formatting.Indented,
+                ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            };
+            var x = _context.companies
+           .Where(a => a.companyId == id)
+           .Include(comp => comp.RestrictedCountries)
+           .ThenInclude(country => country.country);
+           
+
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(x);
+
+
+            return Ok(json);
         }
 
         [HttpPost]
-        public IActionResult AddCompany(Company company)
+        public IActionResult AddCompany(Countries countries)
         {
 
-            _context.addCompany(company);
+            _context.addCompany(countries.companyName, countries.countries);
             _context.SaveChanges();
-            return Ok(company);
+            return Ok(countries);
 
 
+        }
+
+        public class Countries
+        {
+            public string companyName { get; set; }
+            public string[] countries { get; set; }
         }
     }
 }
